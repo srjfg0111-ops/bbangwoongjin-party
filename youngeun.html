@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>빵웅진 퀴즈</title>
+
 
 <style>
 
@@ -18,7 +21,9 @@ body{
     height:100vh;
 }
 
+
 .card{
+
     background:white;
     padding:40px;
     border-radius:25px;
@@ -26,21 +31,28 @@ body{
     box-shadow:0 10px 30px rgba(0,0,0,.15);
     width:90%;
     max-width:450px;
+
 }
+
 
 h1{
     margin-bottom:20px;
 }
 
+
 input{
+
     width:80%;
     padding:12px;
     font-size:18px;
     border-radius:10px;
     border:1px solid #ccc;
+
 }
 
+
 button{
+
     margin-top:15px;
     padding:15px 30px;
     font-size:20px;
@@ -49,16 +61,24 @@ button{
     background:#ff7aa8;
     color:white;
     cursor:pointer;
+
 }
+
 
 .choice{
+
     display:block;
     width:100%;
+
 }
 
+
 .selected{
+
     background:#8b5cf6;
+
 }
+
 
 </style>
 
@@ -78,7 +98,10 @@ button{
 
 <br><br>
 
-<button onclick="startQuiz()">퀴즈 시작</button>
+<button onclick="startQuiz()">
+퀴즈 시작
+</button>
+
 
 </div>
 
@@ -92,41 +115,59 @@ let playerName = "";
 let currentQuestion = 0;
 
 
-// 정답
+
 const correctAnswers = [
-    2,
-    3,
-    1,
-    2,
-    3,
-    2,
-    1,
-    2,
-    3,
-    1
+
+2,
+3,
+1,
+2,
+3,
+2,
+1,
+2,
+3,
+1
+
 ];
 
 
-// 참가자가 선택한 답 저장
+
 let userAnswers = [
-    null,null,null,null,null,
-    null,null,null,null,null
+
+null,null,null,null,null,
+null,null,null,null,null
+
 ];
 
 
+
+// 시작
 
 function startQuiz(){
 
-    playerName = document.getElementById("nameInput").value;
+
+    playerName = document
+    .getElementById("nameInput")
+    .value
+    .trim();
 
 
-    if(playerName.trim() === ""){
+    console.log("입력 이름:", playerName);
+
+
+
+    if(playerName === ""){
+
         alert("이름을 입력해주세요!");
+
         return;
+
     }
 
 
     showQuestion();
+
 
 }
 
@@ -136,88 +177,104 @@ function startQuiz(){
 function showQuestion(){
 
 
-    document.getElementById("screen").innerHTML = `
-
-    <h1>문제 ${currentQuestion + 1}</h1>
-
-    <p>번호를 선택하세요.</p>
+document.getElementById("screen").innerHTML = `
 
 
-    <button class="choice" onclick="selectAnswer(1,this)">①</button>
-
-    <button class="choice" onclick="selectAnswer(2,this)">②</button>
-
-    <button class="choice" onclick="selectAnswer(3,this)">③</button>
+<h1>문제 ${currentQuestion + 1}</h1>
 
 
-    <button onclick="nextQuestion()">다음 ▶</button>
-
-    `;
+<p>번호를 선택하세요.</p>
 
 
-    // 이미 선택한 답이 있으면 표시
-    if(userAnswers[currentQuestion] !== null){
 
-        let buttons = document.querySelectorAll(".choice");
+<button class="choice" onclick="selectAnswer(1,this)">
+①
+</button>
 
-        buttons[userAnswers[currentQuestion]-1].classList.add("selected");
 
-    }
+<button class="choice" onclick="selectAnswer(2,this)">
+②
+</button>
+
+
+<button class="choice" onclick="selectAnswer(3,this)">
+③
+</button>
+
+
+<button onclick="nextQuestion()">
+다음 ▶
+</button>
+
+
+`;
+
+
+
+}
+
+
+
+
+
+function selectAnswer(answer,button){
+
+
+userAnswers[currentQuestion]=answer;
+
+
+let buttons=document.querySelectorAll(".choice");
+
+
+buttons.forEach(btn=>{
+
+btn.classList.remove("selected");
+
+});
+
+
+button.classList.add("selected");
 
 
 }
 
-
-
-function selectAnswer(answer, button){
-
-
-    userAnswers[currentQuestion] = answer;
-
-
-    let buttons = document.querySelectorAll(".choice");
-
-
-    buttons.forEach(function(btn){
-
-        btn.classList.remove("selected");
-
-    });
-
-
-    button.classList.add("selected");
-
-
-}
 
 
 
 function nextQuestion(){
 
 
-    if(userAnswers[currentQuestion] === null){
+if(userAnswers[currentQuestion]===null){
 
-        alert("답을 선택해주세요!");
+alert("답을 선택해주세요!");
 
-        return;
-
-    }
-
-
-    currentQuestion++;
-
-
-    if(currentQuestion >= 10){
-
-        finishQuiz();
-
-    }else{
-
-        showQuestion();
-
-    }
+return;
 
 }
+
+
+currentQuestion++;
+
+
+
+if(currentQuestion>=10){
+
+finishQuiz();
+
+}
+
+else{
+
+showQuestion();
+
+}
+
+
+
+}
+
+
+
 
 
 
@@ -225,59 +282,104 @@ function nextQuestion(){
 function finishQuiz(){
 
 
-    let score = 0;
+
+let score=0;
 
 
-    for(let i=0; i<10; i++){
 
-        if(userAnswers[i] === correctAnswers[i]){
-
-            score++;
-
-        }
-
-    }
+for(let i=0;i<10;i++){
 
 
-fetch("https://script.google.com/macros/s/AKfycbyAu2N-sygBU4mgh99RlaWBFL_cv2hTXCyBHTTNB3EitlUjOqyfIDA3RYbB5ytT1VVMPg/exec", {
+if(userAnswers[i]===correctAnswers[i]){
 
-    method: "POST",
+score++;
 
-   body: JSON.stringify({
-    quiz: "youngeun",
-    name: name,
-    score: score
-})
-
-});
-    document.getElementById("screen").innerHTML = `
-
-
-    <h1>🎉 퀴즈 완료!</h1>
-
-
-    <p>
-
-    ${playerName}님의 점수
-
-    <br><br>
-
-    👑 ${score} / 10점
-
-    </p>
-
-
-    <p>
-
-    결과를 영은에게 보여주세요!
-
-    </p>
-
-
-    `;
+}
 
 
 }
+
+
+
+console.log("최종 전송:",{
+
+quiz:"youngeun",
+name:playerName,
+score:score
+
+});
+
+
+
+
+
+fetch("https://script.google.com/macros/s/AKfycbyAu2N-sygBU4mgh99RlaWBFL_cv2hTXCyBHTTNB3EitlUjOqyfIDA3RYbB5ytT1VVMPg/exec",
+{
+
+method:"POST",
+
+body:JSON.stringify({
+
+quiz:"youngeun",
+
+name:playerName,
+
+score:score
+
+})
+
+})
+
+.then(response=>response.text())
+
+.then(result=>{
+
+console.log("구글 저장 결과:",result);
+
+})
+
+.catch(error=>{
+
+console.log("전송 오류:",error);
+
+});
+
+
+
+
+
+
+
+document.getElementById("screen").innerHTML = `
+
+
+<h1>🎉 퀴즈 완료!</h1>
+
+
+<p>
+
+${playerName}님의 점수
+
+<br><br>
+
+👑 ${score}/10점
+
+</p>
+
+
+<p>
+
+결과를 영은에게 보여주세요!
+
+</p>
+
+
+`;
+
+
+
+}
+
 
 
 </script>
