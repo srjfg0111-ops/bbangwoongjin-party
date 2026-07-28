@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>빵웅진 퀴즈</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Pretendard,sans-serif;
+    background:linear-gradient(135deg,#ffd6e7,#fff3d1);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    width:90%;
+    max-width:450px;
+    background:white;
+    border-radius:25px;
+    padding:40px;
+    text-align:center;
+    box-shadow:0 15px 35px rgba(0,0,0,.15);
+}
+
+input{
+    width:80%;
+    padding:15px;
+    font-size:18px;
+    border-radius:12px;
+    border:1px solid #ddd;
+}
+
+button{
+    width:100%;
+    padding:16px;
+    margin-top:15px;
+    font-size:20px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    background:#ff7aa8;
+    color:white;
+    transition:.2s;
+}
+
+.choice.selected{
+    background:#8b5cf6;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card" id="screen">
+
+    <h1>🎂 참가자 정보</h1>
+
+    <p>이름을 입력해주세요.</p>
+
+    <input id="playerName" type="text" placeholder="예 : 영은">
+
+    <button onclick="startQuiz()">퀴즈 시작</button>
+
+</div>
+
+<script>
+
+const TOTAL_QUESTIONS = 12;
+
+let currentQuestion = 1;
+let playerName = "";
+let answers = [];
+
+function startQuiz(){
+
+    playerName = document.getElementById("playerName").value;
+
+    if(playerName==""){
+        alert("이름을 입력해주세요!");
+        return;
+    }
+
+    showQuestion();
+
+}
+
+function showQuestion(){
+
+    document.getElementById("screen").innerHTML = `
+
+        <h1>문제 ${currentQuestion}</h1>
+
+        <p>번호를 선택하세요.</p>
+
+        <button class="choice" onclick="selectAnswer(1,this)">①</button>
+
+        <button class="choice" onclick="selectAnswer(2,this)">②</button>
+
+        <button class="choice" onclick="selectAnswer(3,this)">③</button>
+
+        <button onclick="nextQuestion()">다음 ▶</button>
+
+    `;
+
+}
+
+function selectAnswer(number,button){
+
+    const buttons=document.querySelectorAll(".choice");
+
+    buttons.forEach(function(btn){
+        btn.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
+    answers[currentQuestion-1]=number;
+
+}
+
+function nextQuestion(){
+
+    if(answers[currentQuestion-1]==null){
+        alert("답을 선택해주세요!");
+        return;
+    }
+
+    currentQuestion++;
+
+    if(currentQuestion>TOTAL_QUESTIONS){
+
+        finishQuiz();
+
+    }else{
+
+        showQuestion();
+
+    }
+
+}
+
+function finishQuiz(){
+
+    document.getElementById("screen").innerHTML=`
+
+        <h1>🎉 제출 완료!</h1>
+
+        <p>
+
+        ${playerName}님<br><br>
+
+        제출이 완료되었습니다.
+
+        <br><br>
+
+        결과 발표를 기다려주세요!
+
+        </p>
+
+    `;
+
+}
+
+</script>
+
+</body>
+</html>
