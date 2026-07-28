@@ -239,7 +239,16 @@ function finishQuiz(){
     }
 
 
+fetch("https://script.google.com/macros/s/AKfycbyAu2N-sygBU4mgh99RlaWBFL_cv2hTXCyBHTTNB3EitlUjOqyfIDA3RYbB5ytT1VVMPg/exec", {
 
+    method: "POST",
+
+    body: JSON.stringify({
+        name: playerName,
+        score: score
+    })
+
+});
     document.getElementById("screen").innerHTML = `
 
 
