@@ -244,9 +244,12 @@ fetch("https://script.google.com/macros/s/AKfycbyAu2N-sygBU4mgh99RlaWBFL_cv2hTXC
     method: "POST",
 
     body: JSON.stringify({
+        quiz: "woong",
         name: playerName,
         score: score
     })
+
+});
 
 });
     document.getElementById("screen").innerHTML = `
