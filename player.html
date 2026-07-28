@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>빵웅진 퀴즈</title>
 
 <style>
@@ -18,122 +19,195 @@ body{
 }
 
 .card{
+    background:white;
+    padding:40px;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
     width:90%;
     max-width:450px;
-    background:white;
-    border-radius:25px;
-    padding:40px;
-    text-align:center;
-    box-shadow:0 15px 35px rgba(0,0,0,.15);
+}
+
+h1{
+    margin-bottom:20px;
 }
 
 input{
     width:80%;
-    padding:15px;
+    padding:12px;
     font-size:18px;
-    border-radius:12px;
-    border:1px solid #ddd;
+    border-radius:10px;
+    border:1px solid #ccc;
 }
 
 button{
-    width:100%;
-    padding:16px;
     margin-top:15px;
+    padding:15px 30px;
     font-size:20px;
     border:none;
     border-radius:12px;
-    cursor:pointer;
     background:#ff7aa8;
     color:white;
-    transition:.2s;
+    cursor:pointer;
 }
 
-.choice.selected{
+.choice{
+    display:block;
+    width:100%;
+}
+
+.selected{
     background:#8b5cf6;
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="card" id="screen">
 
-    <h1>🎂 참가자 정보</h1>
+<h1>🎂 빵웅진 퀴즈</h1>
 
-    <p>이름을 입력해주세요.</p>
+<p>이름을 입력해주세요.</p>
 
-    <input id="playerName" type="text" placeholder="예 : 영은">
+<input id="nameInput" type="text" placeholder="예: 영은">
 
-    <button onclick="startQuiz()">퀴즈 시작</button>
+<br><br>
+
+<button onclick="startQuiz()">퀴즈 시작</button>
 
 </div>
 
+
+
 <script>
 
-const TOTAL_QUESTIONS = 12;
 
-let currentQuestion = 1;
 let playerName = "";
-let answers = [];
+
+let currentQuestion = 0;
+
+
+// 정답
+const correctAnswers = [
+    2,
+    3,
+    1,
+    2,
+    3,
+    2,
+    1,
+    2,
+    3,
+    1
+];
+
+
+// 참가자가 선택한 답 저장
+let userAnswers = [
+    null,null,null,null,null,
+    null,null,null,null,null
+];
+
+
 
 function startQuiz(){
 
-    playerName = document.getElementById("playerName").value;
+    playerName = document.getElementById("nameInput").value;
 
-    if(playerName==""){
+
+    if(playerName.trim() === ""){
         alert("이름을 입력해주세요!");
         return;
     }
+
 
     showQuestion();
 
 }
 
+
+
+
 function showQuestion(){
+
 
     document.getElementById("screen").innerHTML = `
 
-        <h1>문제 ${currentQuestion}</h1>
+    <h1>문제 ${currentQuestion + 1}</h1>
 
-        <p>번호를 선택하세요.</p>
+    <p>번호를 선택하세요.</p>
 
-        <button class="choice" onclick="selectAnswer(1,this)">①</button>
 
-        <button class="choice" onclick="selectAnswer(2,this)">②</button>
+    <button class="choice" onclick="selectAnswer(1,this)">①</button>
 
-        <button class="choice" onclick="selectAnswer(3,this)">③</button>
+    <button class="choice" onclick="selectAnswer(2,this)">②</button>
 
-        <button onclick="nextQuestion()">다음 ▶</button>
+    <button class="choice" onclick="selectAnswer(3,this)">③</button>
+
+
+    <button onclick="nextQuestion()">다음 ▶</button>
 
     `;
 
+
+    // 이미 선택한 답이 있으면 표시
+    if(userAnswers[currentQuestion] !== null){
+
+        let buttons = document.querySelectorAll(".choice");
+
+        buttons[userAnswers[currentQuestion]-1].classList.add("selected");
+
+    }
+
+
 }
 
-function selectAnswer(number,button){
 
-    const buttons=document.querySelectorAll(".choice");
+
+function selectAnswer(answer, button){
+
+
+    userAnswers[currentQuestion] = answer;
+
+
+    let buttons = document.querySelectorAll(".choice");
+
 
     buttons.forEach(function(btn){
+
         btn.classList.remove("selected");
+
     });
+
 
     button.classList.add("selected");
 
-    answers[currentQuestion-1]=number;
 
 }
 
+
+
 function nextQuestion(){
 
-    if(answers[currentQuestion-1]==null){
+
+    if(userAnswers[currentQuestion] === null){
+
         alert("답을 선택해주세요!");
+
         return;
+
     }
+
 
     currentQuestion++;
 
-    if(currentQuestion>TOTAL_QUESTIONS){
+
+    if(currentQuestion >= 10){
 
         finishQuiz();
 
@@ -145,29 +219,60 @@ function nextQuestion(){
 
 }
 
+
+
+
 function finishQuiz(){
 
-    document.getElementById("screen").innerHTML=`
 
-        <h1>🎉 제출 완료!</h1>
+    let score = 0;
 
-        <p>
 
-        ${playerName}님<br><br>
+    for(let i=0; i<10; i++){
 
-        제출이 완료되었습니다.
+        if(userAnswers[i] === correctAnswers[i]){
 
-        <br><br>
+            score++;
 
-        결과 발표를 기다려주세요!
+        }
 
-        </p>
+    }
+
+
+
+    document.getElementById("screen").innerHTML = `
+
+
+    <h1>🎉 퀴즈 완료!</h1>
+
+
+    <p>
+
+    ${playerName}님의 점수
+
+    <br><br>
+
+    👑 ${score} / 10점
+
+    </p>
+
+
+    <p>
+
+    결과를 영은에게 보여주세요!
+
+    </p>
+
 
     `;
 
+
 }
+
 
 </script>
 
+
 </body>
+
 </html>
